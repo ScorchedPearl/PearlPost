@@ -88,7 +88,9 @@ console.log("hlo");
   })
   redirect("/signin");
 }
-
+export async function googleSuccess() {
+  redirect("/feedback");
+}
 export async function logout() {
   await deleteSession();
   redirect("/signin");

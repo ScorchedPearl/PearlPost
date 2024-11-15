@@ -14,10 +14,12 @@ const queries={
   verifyGoogleToken: async(parent:any,{token}:{token:String})=>{
     const googletoken=token;
     const googleoauthurl=new URL('https://www.googleapis.com/oauth2/v3/userinfo')
-    const {data}=await axios.get<GoogleTokenResult>(googleoauthurl.toString(), {
+    const {data}=await axios.get<GoogleTokenResult>
+    (googleoauthurl.toString(), {
       headers: {
         Authorization: `Bearer ${googletoken}`,
       },
+      responseType:"json"
     });
       const user= await prismaClient.user.findUnique({
         where:{email:data.email},
@@ -43,6 +45,7 @@ const queries={
     const id=ctx.user?.id
     if(!id) return null
     const user= await prismaClient.user.findUnique({ where:{id} })
+    console.log(user);
     return user;
   }
 }

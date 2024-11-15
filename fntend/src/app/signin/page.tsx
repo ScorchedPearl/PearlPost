@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useActionState, useCallback } from "react";
 import { useFormStatus } from "react-dom";
 import { login } from "@/lib/action";
+import { createGoogleSession } from "@/lib/session";
 import { useGoogleLogin,TokenResponse } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
 import { graphqlClient } from "clients/api";
 import { verifyUserGoogleTokenQuery } from "graphql/query/user";
+import { redirect } from "next/navigation";
 function SignInPage() {
   const [state, loginAction] = useActionState(login, undefined);
     const googlelogin = useGoogleLogin({
@@ -40,10 +42,10 @@ function SignInPage() {
         console.log(verifyGoogleToken);
         if(verifyGoogleToken){
           window.localStorage.setItem("__PostPearl_Token",verifyGoogleToken);
+          createGoogleSession();
+          redirect("/feedback");
         }
       }
-      toast.success(`verified Success`);
-      
     },[])
   return (
     <div>

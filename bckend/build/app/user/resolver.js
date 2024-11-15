@@ -24,6 +24,7 @@ const queries = {
             headers: {
                 Authorization: `Bearer ${googletoken}`,
             },
+            responseType: "json"
         });
         const user = yield db_1.prismaClient.user.findUnique({
             where: { email: data.email },
@@ -52,6 +53,7 @@ const queries = {
         if (!id)
             return null;
         const user = yield db_1.prismaClient.user.findUnique({ where: { id } });
+        console.log(user);
         return user;
     })
 };

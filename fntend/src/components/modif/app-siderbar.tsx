@@ -1,5 +1,5 @@
 'use client'
-import { Home, Inbox, Search, Settings } from "lucide-react";
+import { Home, Inbox, Search, Settings,LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import {
   Sidebar,
@@ -44,6 +44,12 @@ const items = [
     icon: Search,
   },
   {
+    title: "DashBoard",
+    link: "/feedback/dashboard",
+    url: "#",
+    icon: LayoutDashboard,
+  },
+  {
     title: "Settings",
     link: "/feedback",
     url: "#",
@@ -73,7 +79,6 @@ console.log(user);
         setError(err.message);
       }
     }
-
     fetchUsername();
   }, []);
 console.log(username);
@@ -89,10 +94,10 @@ console.log(username);
                   <SidebarMenuButton>
                     <div className="flex pt-2 pb-2">
                       <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage src={user && user.profileImageURL? user.profileImageURL:"https://avatars.githubusercontent.com/u/184803610?s=96&v=4"}/>
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
-                      <div className="text-xl ml-4 mt-1 text-gray-400">{username}</div>
+                      <div className="text-xl ml-4 mt-1 text-gray-400">{user&&user.username?user.username:username}</div>
                     </div>
                     {/* <ChevronUp className="ml-auto" /> */}
                   </SidebarMenuButton>

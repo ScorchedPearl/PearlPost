@@ -57,7 +57,6 @@ export default function CreatePost() {
     },
   });
  
-  // Define a submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }

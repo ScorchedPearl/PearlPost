@@ -1,4 +1,4 @@
-import "server-only";
+"use server"
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
@@ -16,7 +16,12 @@ export async function createSession(username: string) {
     expires: expiresAt,
   });
 }
-
+export async function createGoogleSession(){
+  (await cookies()).set("session", "google", {
+    httpOnly: true,
+    secure: true,
+  })
+}
 export async function deleteSession() {
   (await cookies()).delete("session");
 }
@@ -38,6 +43,9 @@ export async function decrypt(session: string | undefined = "") {
   if (!session) {
     console.log("No session provided");
     return null; 
+  }
+  if(session === "google"){
+    return {username: "google"}
   }
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
