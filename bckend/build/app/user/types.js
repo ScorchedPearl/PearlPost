@@ -8,5 +8,7 @@ exports.types = `#graphql
     username:String
     email:String!
     profileImageURL:String
+
+    posts:[Post]
   }
 `;

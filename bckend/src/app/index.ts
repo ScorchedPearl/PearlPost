@@ -5,6 +5,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { prismaClient } from "../ clients/db";
 import { User } from "./user";
+import { Post } from "./post"
 import { GraphqlContext } from "../interfaces";
 import JWTService from "../services/jwt";
 export async function initServer(){
@@ -14,15 +15,26 @@ export async function initServer(){
   const server = new ApolloServer<GraphqlContext>({
     typeDefs:`
       ${User.types}
-
+      ${Post.types}
+    
       type Query{
           ${User.query}
+          ${Post.query}
+      }
+      type Mutation{
+          ${Post.mutations}
       }
     `,
     resolvers:{
       Query:{
         ...User.resolvers.queries,
+        ...Post.resolvers.queries,
       },
+      Mutation:{
+        ...Post.resolvers.mutations,
+      },
+      ...Post.resolvers.authorResolvers,
+      ...User.resolvers.PostResolvers,
     },
   });
   await server.start();

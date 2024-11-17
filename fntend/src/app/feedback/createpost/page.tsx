@@ -1,9 +1,11 @@
 "use client";
+import { useCallback } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/modif/app-siderbar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Form,
   FormControl,
@@ -13,23 +15,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input"; 
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
- 
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { useCreatePost } from "@/hooks/posts";
+import { Progress } from "@/components/ui/progress";
+
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  image: z.string().min(0),
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
@@ -41,26 +43,30 @@ const formSchema = z.object({
     .max(1000, {
       message: "Content must not be longer than 1000 characters.",
     }),
-    date: z.date({
-      required_error: "A publishing date is required.",
-    }),
+  date: z.date({
+    required_error: "A publishing date is required.",
+  }),
 });
 
 export default function CreatePost() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      image: "",
       title: "",
       content: "",
       date: new Date(),
     },
   });
- 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const {mutate,isPending}=useCreatePost();
+  const onSubmit=useCallback((values: z.infer<typeof formSchema>)=>{
     console.log(values);
-  }
-  
+    mutate({
+      content:values.content,
+      title:values.title,
+      imageUrl:values.image,
+  })
+  },[mutate])
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -68,58 +74,63 @@ export default function CreatePost() {
         <SidebarTrigger />
         <div className="flex items-center justify-center">
           <div className="ml-20">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Scorch" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem> 
-                )}
-              />
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Title of your post" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Enter the title of your post.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Title of your post" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Enter the title of your post.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Content</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Write your post content here..." {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Describe your post in detail.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Write your post content here..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Describe your post in detail.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image</FormLabel>
+                      <FormControl>
+                      <Input accept="image/*" id="picture" type="file"  placeholder="Image For Your Post" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Upload Image
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="date"
@@ -157,17 +168,24 @@ export default function CreatePost() {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>
-                        Your Publishing Date.
-                      </FormDescription>
+                      <FormDescription>Your Publishing Date.</FormDescription>
                       <FormMessage />
                     </FormItem>
-          )}
-        />
-              <Button type="submit">Submit</Button>
-            </form>
-          </Form>
+                  )}
+                />
+                <Button type="submit">Submit</Button>
+              </form>
+            </Form>
           </div>
+          {(!isPending)?<div className="mx-80">
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[200px] w-[350px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[350px]" />
+                <Skeleton className="h-4 w-[300px]" />
+              </div>
+            </div>
+          </div>:<Progress value={33}></Progress>}
         </div>
       </main>
     </SidebarProvider>

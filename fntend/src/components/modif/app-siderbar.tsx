@@ -59,7 +59,6 @@ const items = [
 
 export function AppSidebar() {
   const {user}=useCurrentUser();
-console.log(user);
   const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
 
@@ -81,7 +80,6 @@ console.log(user);
     }
     fetchUsername();
   }, []);
-console.log(username);
   return (
     <div>
     <Sidebar>

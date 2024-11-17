@@ -57,4 +57,11 @@ const queries = {
         return user;
     })
 };
-exports.resolvers = { queries };
+const PostResolvers = {
+    User: {
+        posts: (parent) => {
+            return db_1.prismaClient.post.findMany({ where: { authorId: parent.id } });
+        }
+    }
+};
+exports.resolvers = { queries, PostResolvers };
