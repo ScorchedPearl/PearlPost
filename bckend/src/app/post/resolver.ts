@@ -8,6 +8,13 @@ interface CreatePostPayload{
 }
 const queries={
   getAllPosts:()=>prismaClient.post.findMany({orderBy:{createdAt:"desc"}}),
+  getPostCount: async (parent:any,args:any,context:any,info:any) => {
+    const { username } = args;
+    if(username==="lol"){
+      return 0;
+    }
+    return await prismaClient.post.count({ where: { author: { username } } });
+  },
 }
 const mutations={
   createPost:async (parent:any,{payload}:{payload:CreatePostPayload},ctx:GraphqlContext)=>{

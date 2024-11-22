@@ -21,46 +21,47 @@ import {
 import { ModeToggle } from "./modetoggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/lib/action";
-import { useState,useEffect } from "react";
+import { useState,useEffect, useMemo } from "react";
 import { useCurrentUser } from "@/hooks/user";
 
-const items = [
-  {
-    title: "Home",
-    link: "/feedback",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "CreatePost",
-    link: "/feedback/createpost",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "SearchPost",
-    link: "/feedback/searchpost",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "DashBoard",
-    link: "/feedback/dashboard",
-    url: "#",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Settings",
-    link: "/feedback",
-    url: "#",
-    icon: Settings,
-  },
-];
+
 
 export function AppSidebar() {
   const {user}=useCurrentUser();
   const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
+    const items=[
+        {
+          title: "Home",
+          link: "/feedback",
+          url: "#",
+          icon: Home,
+        },
+        {
+          title: "CreatePost",
+          link: "/feedback/createpost",
+          url: "#",
+          icon: Inbox,
+        },
+        {
+          title: "SearchPost",
+          link: "/feedback/searchpost",
+          url: "#",
+          icon: Search,
+        },
+        {
+          title: "DashBoard",
+          link: `/feedback/dashboard/${user?user.username:""}`,
+          url: "#",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Settings",
+          link: "/feedback",
+          url: "#",
+          icon: Settings,
+        },
+      ];
 
   useEffect(() => {
     async function fetchUsername() {

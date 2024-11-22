@@ -1,7 +1,5 @@
 import { graphql } from "../../gql";
 
-
-
 export const getAllPostsQuery = graphql(`
   query GetAllPosts {
     getAllPosts {
@@ -16,4 +14,9 @@ export const getAllPostsQuery = graphql(`
       }
     }
   }
+`);
+export const getPostCountQuery = graphql(`
+  query GetPostCount($username: String!) {
+  getPostCount(username: $username)
+}
 `);

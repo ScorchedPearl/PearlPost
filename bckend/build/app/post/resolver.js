@@ -13,6 +13,13 @@ exports.resolvers = void 0;
 const db_1 = require("../../ clients/db");
 const queries = {
     getAllPosts: () => db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" } }),
+    getPostCount: (parent, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = args;
+        if (username === "lol") {
+            return 0;
+        }
+        return yield db_1.prismaClient.post.count({ where: { author: { username } } });
+    }),
 };
 const mutations = {
     createPost: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { payload }, ctx) {
