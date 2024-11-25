@@ -27,7 +27,7 @@ const Header = () => {
               <Link href="/post" >
                 Post
               </Link>
-              <Link href="/contactus">
+              <Link href="/chat">
                 ContactUs
               </Link>
               <Link href="/faq">

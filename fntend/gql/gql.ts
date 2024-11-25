@@ -15,11 +15,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "#graphql\n  mutation CreatePost($payload: CreatePostData!) {\n    createPost(payload: $payload) {\n      id\n    }\n}\n": types.CreatePostDocument,
-    "\n  query GetAllPosts {\n    getAllPosts {\n      id\n      content\n      title\n      imageUrl\n      author {\n        name\n        profileImageURL\n        username\n      }\n    }\n  }\n": types.GetAllPostsDocument,
-    "\n  query GetPostCount($username: String!) {\n  getPostCount(username: $username)\n}\n": types.GetPostCountDocument,
-    "\n   query GetPostByUsername($username: String) {\n    getPostByUsername(username: $username) {\n    id\n    content\n    title\n    imageUrl\n    author {\n      name\n      profileImageURL\n      username\n    }\n  }\n}\n": types.GetPostByUsernameDocument,
     "#graphql\n  query VerifyUserGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": types.VerifyUserGoogleTokenDocument,
-    "\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n": types.GetCurrentUserDocument,
+    "#graphql¸\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n": types.GetCurrentUserDocument,
 };
 
 /**
@@ -43,23 +40,11 @@ export function graphql(source: "#graphql\n  mutation CreatePost($payload: Creat
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetAllPosts {\n    getAllPosts {\n      id\n      content\n      title\n      imageUrl\n      author {\n        name\n        profileImageURL\n        username\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllPosts {\n    getAllPosts {\n      id\n      content\n      title\n      imageUrl\n      author {\n        name\n        profileImageURL\n        username\n      }\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query GetPostCount($username: String!) {\n  getPostCount(username: $username)\n}\n"): (typeof documents)["\n  query GetPostCount($username: String!) {\n  getPostCount(username: $username)\n}\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n   query GetPostByUsername($username: String) {\n    getPostByUsername(username: $username) {\n    id\n    content\n    title\n    imageUrl\n    author {\n      name\n      profileImageURL\n      username\n    }\n  }\n}\n"): (typeof documents)["\n   query GetPostByUsername($username: String) {\n    getPostByUsername(username: $username) {\n    id\n    content\n    title\n    imageUrl\n    author {\n      name\n      profileImageURL\n      username\n    }\n  }\n}\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "#graphql\n  query VerifyUserGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n"): (typeof documents)["#graphql\n  query VerifyUserGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n"): (typeof documents)["\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n"];
+export function graphql(source: "#graphql¸\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n"): (typeof documents)["#graphql¸\n  query GetCurrentUser {\n    getCurrentUser {\n    id\n    email\n    name\n    username\n    profileImageURL\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
