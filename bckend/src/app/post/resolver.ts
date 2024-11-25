@@ -15,6 +15,19 @@ const queries={
     }
     return await prismaClient.post.count({ where: { author: { username } } });
   },
+  getPostByUsername:async (parent:any,{username}:{username:string})=>{
+    if(username==="lol"){
+      return [];
+    }
+    const post=await prismaClient.post.findMany({
+      where:{
+        author:{
+          username
+        }
+      }
+    })
+    return post;
+  }
 }
 const mutations={
   createPost:async (parent:any,{payload}:{payload:CreatePostPayload},ctx:GraphqlContext)=>{

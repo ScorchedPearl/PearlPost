@@ -20,6 +20,19 @@ const queries = {
         }
         return yield db_1.prismaClient.post.count({ where: { author: { username } } });
     }),
+    getPostByUsername: (parent_1, _a) => __awaiter(void 0, [parent_1, _a], void 0, function* (parent, { username }) {
+        if (username === "lol") {
+            return [];
+        }
+        const post = yield db_1.prismaClient.post.findMany({
+            where: {
+                author: {
+                    username
+                }
+            }
+        });
+        return post;
+    })
 };
 const mutations = {
     createPost: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { payload }, ctx) {

@@ -3,8 +3,9 @@ import { Button } from "../ui/button";
 import { GiCottonFlower } from "react-icons/gi";
 import { ModeToggle } from "../modif/modetoggle";
 import { Input } from "../ui/input";
-
+import { useCurrentUser } from "@/hooks/user";
 const Header = () => {
+  let user=useCurrentUser();
   return (
     <header className="p-3 text-bg-dark">
       <div className="flex">
@@ -19,12 +20,12 @@ const Header = () => {
                 Home
               </Link>
            
-              <Link href="/booking" > 
-                Booking
+              <Link href="/diary" > 
+                MyDiary
               </Link>
            
-              <Link href="/feedback" >
-                Feedback
+              <Link href="/post" >
+                Post
               </Link>
               <Link href="/contactus">
                 ContactUs
@@ -35,13 +36,12 @@ const Header = () => {
               </div>
             <div className="w-72"><Input ></Input></div>
             <ModeToggle></ModeToggle>
-         
-
-          <div className="">
+          {
+            (user)&&(<div className="">
             <Button><Link href="/signin">Login</Link></Button>
             <Button><Link href="/signup">Sign-up</Link></Button>
-          </div>
-        
+            </div>)
+          }
       </div>
     </header>
   );

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Diary" ALTER COLUMN "date" DROP NOT NULL,
+ALTER COLUMN "published" DROP NOT NULL,
+ALTER COLUMN "public" DROP NOT NULL;

@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-const protectedRoutes = ["/feedback"];
+const protectedRoutes = ["/feedback,/followingbrain"];
 const publicRoutes = ["/signin","/signup"];
 
 export default async function middleware(req: NextRequest) {
@@ -17,7 +17,7 @@ export default async function middleware(req: NextRequest) {
       }
     
       if (isPublicRoute && session) {
-        return NextResponse.redirect(new URL("feedback", req.nextUrl));
+        return NextResponse.redirect(new URL("/", req.nextUrl));
       }
         console.log("Authenticated user:", session?.username);
         const response = NextResponse.next();

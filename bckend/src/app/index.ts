@@ -8,6 +8,7 @@ import { User } from "./user";
 import { Post } from "./post"
 import { GraphqlContext } from "../interfaces";
 import JWTService from "../services/jwt";
+import { Diary } from "./diary";
 export async function initServer(){
   const app=express();
   app.use(bodyParser.json());
@@ -16,6 +17,7 @@ export async function initServer(){
     typeDefs:`
       ${User.types}
       ${Post.types}
+      ${Diary.types}
     
       type Query{
           ${User.query}
@@ -23,6 +25,7 @@ export async function initServer(){
       }
       type Mutation{
           ${Post.mutations}
+          ${Diary.mutations}
       }
     `,
     resolvers:{
@@ -32,6 +35,7 @@ export async function initServer(){
       },
       Mutation:{
         ...Post.resolvers.mutations,
+        ...Diary.resolvers.mutations,
       },
       ...Post.resolvers.authorResolvers,
       ...User.resolvers.PostResolvers,

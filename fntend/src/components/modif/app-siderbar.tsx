@@ -30,34 +30,35 @@ export function AppSidebar() {
   const {user}=useCurrentUser();
   const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
+  let linkAccount=`/feedback/profile/${user?user.id:""}`
     const items=[
         {
           title: "Home",
-          link: "/feedback",
+          link: "/post",
           url: "#",
           icon: Home,
         },
         {
           title: "CreatePost",
-          link: "/feedback/createpost",
+          link: "/post/createpost",
           url: "#",
           icon: Inbox,
         },
         {
           title: "SearchPost",
-          link: "/feedback/searchpost",
+          link: "/post/searchpost",
           url: "#",
           icon: Search,
         },
         {
           title: "DashBoard",
-          link: `/feedback/dashboard/${user?user.username:""}`,
+          link: `/post/dashboard/${user?user.username:""}`,
           url: "#",
           icon: LayoutDashboard,
         },
         {
           title: "Settings",
-          link: "/feedback",
+          link: "/post",
           url: "#",
           icon: Settings,
         },
@@ -106,7 +107,7 @@ export function AppSidebar() {
                   className="w-[--radix-popper-anchor-width]"
                 >
                   <DropdownMenuItem>
-                    <span>Account</span>
+                    <Link href={linkAccount}><span>Account</span></Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <span>Billing</span>

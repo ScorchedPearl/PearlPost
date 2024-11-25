@@ -48,6 +48,11 @@ const queries={
     const user= await prismaClient.user.findUnique({ where:{id} })
     console.log(user);
     return user;
+  },
+  getUserInfoById: async(parent:any,{id}:{id:string})=>{
+    if(!id) return null;
+    const user= await prismaClient.user.findUnique({where:{id}})
+    return user;
   }
 }
 const PostResolvers={

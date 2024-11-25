@@ -1,4 +1,5 @@
 export const query =`#graphql
   getAllPosts:[Post]
-  getPostCount(username:String):Int
+  getPostCount(id:String):Int
+  getPostByUsername(id:String):[Post]
 `

@@ -17,12 +17,14 @@ model User{
   updatedAt DateTime @updatedAt
   
   posts Post[]
+  diarys Diary[]
 }
 model Post{
   id String @id @default(cuid())
   title String
   content String
   imageURL String?
+  tags Tag[] @relation("PostTags")
   published Boolean @default(false)
   
   author User @relation(fields: [authorId],references: [id])
@@ -30,4 +32,24 @@ model Post{
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+model Diary {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  imageUrl  String?
+  date      DateTime
+  public    Boolean  @default(false)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  tags      Tag[]    @relation("DiaryTags")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id     String   @id @default(cuid())
+  title  String   @unique
+  diaries Diary[] @relation("DiaryTags")
+  posts  Post[]   @relation("PostTags")
 }

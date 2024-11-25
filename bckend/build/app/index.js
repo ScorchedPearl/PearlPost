@@ -21,6 +21,7 @@ const express4_1 = require("@apollo/server/express4");
 const user_1 = require("./user");
 const post_1 = require("./post");
 const jwt_1 = __importDefault(require("../services/jwt"));
+const diary_1 = require("./diary");
 function initServer() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = (0, express_1.default)();
@@ -30,6 +31,7 @@ function initServer() {
             typeDefs: `
       ${user_1.User.types}
       ${post_1.Post.types}
+      ${diary_1.Diary.types}
     
       type Query{
           ${user_1.User.query}
@@ -37,9 +39,10 @@ function initServer() {
       }
       type Mutation{
           ${post_1.Post.mutations}
+          ${diary_1.Diary.mutations}
       }
     `,
-            resolvers: Object.assign(Object.assign({ Query: Object.assign(Object.assign({}, user_1.User.resolvers.queries), post_1.Post.resolvers.queries), Mutation: Object.assign({}, post_1.Post.resolvers.mutations) }, post_1.Post.resolvers.authorResolvers), user_1.User.resolvers.PostResolvers),
+            resolvers: Object.assign(Object.assign({ Query: Object.assign(Object.assign({}, user_1.User.resolvers.queries), post_1.Post.resolvers.queries), Mutation: Object.assign(Object.assign({}, post_1.Post.resolvers.mutations), diary_1.Diary.resolvers.mutations) }, post_1.Post.resolvers.authorResolvers), user_1.User.resolvers.PostResolvers),
         });
         yield server.start();
         app.use("/graphql", (0, express4_1.expressMiddleware)(server, { context: (_a) => __awaiter(this, [_a], void 0, function* ({ req, res }) {

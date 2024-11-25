@@ -43,7 +43,7 @@ function SignInPage() {
         if(verifyGoogleToken){
           window.localStorage.setItem("__PostPearl_Token",verifyGoogleToken);
           createGoogleSession();
-          redirect("/feedback");
+          redirect("/");
         }
       }
     },[])
