@@ -13,6 +13,29 @@ export const getCurrentUserQuery = graphql(`#graphql¸
     name
     username
     profileImageURL
+    posts {
+      content
+      imageURL
+      title
+    }
     }
   }
 `);
+export const getUserInfoByIdQuery = graphql(`#graphql¸
+  query GetUserInfoById($getUserInfoByIdId: ID!) {
+  getUserInfoById(id: $getUserInfoByIdId) {
+    posts {
+      content
+      imageURL
+      title
+      id
+    }
+    email
+    id
+    name
+    username
+    profileImageURL
+  }
+}
+`);
+

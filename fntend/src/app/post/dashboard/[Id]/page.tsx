@@ -15,7 +15,7 @@ export default function FeedBack() {
   const { user } = useCurrentUser();
   const username = user?.username ? user.username : "lol";
   const { postCount } = usePostCount(username);
-  const { post } = useGetPostsByUsername(username);
+  const { post }  = useGetPostsByUsername(username);
   function handlePosts(){
     setShowposts(!showPost);
     return;

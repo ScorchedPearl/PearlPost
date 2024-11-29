@@ -4,6 +4,7 @@ import { CreatePostData } from "gql/graphql";
 import { createPostMutation } from "graphql/mutation/post";
 import { getAllPostsQuery, getPostByUsernameQuery } from "graphql/query/post";
 import { getPostCountQuery } from 'graphql/query/post';
+import { useEffect } from "react";
 interface Author {
   name: string;
   profileImageURL: string;
@@ -15,10 +16,10 @@ export type GetPostByUsernameQuery = {
     content: string;
     title: string;
     imageUrl: string;
+    tags: string[];
     author: {
       name: string;
       profileImageURL: string;
-      username: string;
     };
   }[];
 };
@@ -31,7 +32,10 @@ interface Post {
   id: string;
   content: string;
   title: string;
+  tags: string[];
   imageUrl: string;
+  createdAt:Date;
+  updatedAt:Date;
   author: Author;
 }
 interface GetAllPostsResponse {
@@ -44,9 +48,6 @@ interface GetPostCountResponse {
 
 interface GetPostCountVariables {
   username: string;
-}
-interface GetPostByUsernameResponse{
-  getPostUsername: Post[];
 }
 export const useCreatePost=()=>{
   const queryClient=useQueryClient()
@@ -81,6 +82,7 @@ export const useGetPostsByUsername = (username: string) => {
         { username }
       ),
   });
+  return{...query,post:query.data?.getPostByUsername};
 }
 
 export const usePostCount = (username: string) => {
@@ -92,6 +94,5 @@ export const usePostCount = (username: string) => {
         { username }
       ),
   });
-
   return { ...query, postCount:query.data?.getPostCount };
 };

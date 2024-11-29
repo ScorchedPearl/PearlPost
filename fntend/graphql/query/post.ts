@@ -1,5 +1,6 @@
 import { TypedQueryDocumentNode } from "graphql";
 import { graphql } from "../../gql";
+import { GetAllPostsQuery } from "gql/graphql";
 
 interface GetPostCountResponse {
   getPostCount: number;
@@ -30,15 +31,18 @@ export const getAllPostsQuery = graphql(`#graphql
       id
       content
       title
-      imageUrl
+      imageURL
+      createdAt
+      updatedAt
       author {
         name
         profileImageURL
         username
+        id
       }
     }
   }
-`);
+`) as GetAllPostsQuery;
 export const getPostCountQuery = graphql(`#graphql
   query GetPostCount($username: String!) {
     getPostCount(username: $username)
@@ -51,12 +55,17 @@ export const getPostByUsernameQuery = graphql(`#graphql
       id
       content
       title
-      imageUrl
+      imageURL
       author {
         name
         profileImageURL
-        username
       }
     }
   }
-`)as TypedQueryDocumentNode<GetPostByUsernameQuery, GetPostByUsernameVariables>;;
+`)as TypedQueryDocumentNode<GetPostByUsernameQuery, GetPostByUsernameVariables>;
+
+export const getSignedUrlForPostImageQuery = graphql(`#graphql
+  query GetSignedURL($imageName: String!, $imageType: String!) {
+  getSignedUrlForPostImage(imageName: $imageName, imageType: $imageType)
+}
+`);

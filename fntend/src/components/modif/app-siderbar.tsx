@@ -30,7 +30,7 @@ export function AppSidebar() {
   const {user}=useCurrentUser();
   const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
-  let linkAccount=`/feedback/profile/${user?user.id:""}`
+  let linkAccount=`/post/profile/${user?user.id:""}`
     const items=[
         {
           title: "Home",
@@ -63,7 +63,10 @@ export function AppSidebar() {
           icon: Settings,
         },
       ];
-
+     function handlesignout(){
+      localStorage.removeItem("__PostPearl_Token");
+      logout();
+      }
   useEffect(() => {
     async function fetchUsername() {
       try {
@@ -113,7 +116,7 @@ export function AppSidebar() {
                     <span>Billing</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <span onClick={()=>{logout()}}>Sign out</span>
+                    <span onClick={handlesignout}>Sign out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

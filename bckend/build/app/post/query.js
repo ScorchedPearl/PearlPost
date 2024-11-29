@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.query = void 0;
 exports.query = `#graphql
   getAllPosts:[Post]
-  getPostCount(id:String):Int
-  getPostByUsername(id:String):[Post]
+  getPostCount(username:String!):Int
+  getPostByUsername(username:String!):[Post]
+  getSignedUrlForPostImage(imageName:String!,imageType:String!):String
 `;

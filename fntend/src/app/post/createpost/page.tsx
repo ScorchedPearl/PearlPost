@@ -1,5 +1,5 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/modif/app-siderbar";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,9 +29,16 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useCreatePost } from "@/hooks/posts";
 import { Progress } from "@/components/ui/progress";
+import { graphqlClient } from "clients/api";
+import { getSignedUrlForPostImageQuery } from "graphql/query/post";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Image from "next/image";
 
 const formSchema = z.object({
-  image: z.string().min(0),
+  image: z.custom<File>((value) => value instanceof File && value.size > 0, {
+    message: "Please upload a valid image file",
+  }),
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
@@ -43,8 +50,8 @@ const formSchema = z.object({
     .max(1000, {
       message: "Content must not be longer than 1000 characters.",
     }),
-  date: z.date({
-    required_error: "A publishing date is required.",
+  tags: z.string().min(0, {
+    message: "Tag must be at least 3 characters",
   }),
 });
 
@@ -52,28 +59,58 @@ export default function CreatePost() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: "",
       title: "",
       content: "",
-      date: new Date(),
+      tags: "",
     },
   });
-  const {mutate,isPending}=useCreatePost();
-  const onSubmit=useCallback((values: z.infer<typeof formSchema>)=>{
-    console.log(values);
-    mutate({
-      content:values.content,
-      title:values.title,
-      imageUrl:values.image,
-  })
-  },[mutate])
+  const [imageurl, setImageurl] = useState("");
+  const { mutate, isPending } = useCreatePost();
+  const onSubmit = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      console.log(values.image);
+
+      if (values.image) {
+        const { getSignedUrlForPostImage } = await graphqlClient.request(
+          getSignedUrlForPostImageQuery,
+          {
+            imageName: values.image.name,
+            imageType: values.image.type,
+          }
+        );
+
+        if (getSignedUrlForPostImage) {
+          toast.loading("Uploading...");
+          await axios.put(getSignedUrlForPostImage, values.image, {
+            headers: {
+              contentType: values.image.type,
+            },
+          });
+
+          toast.success("Uploaded...");
+          const url = new URL(getSignedUrlForPostImage);
+          const filepath = `${url.origin}${url.pathname}`;
+          setImageurl(filepath);
+          console.log(filepath);
+          mutate({
+            content: values.content,
+            title: values.title,
+            imageUrl: filepath,
+            tags: values.tags.split(" "),
+          });
+        }
+      }
+    },
+    [mutate, graphqlClient, toast]
+  );
+
   return (
     <SidebarProvider>
       <AppSidebar />
       <main>
         <SidebarTrigger />
         <div className="flex items-center justify-center">
-          <div className="ml-20">
+          <div className="ml-20 w-80">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -122,53 +159,43 @@ export default function CreatePost() {
                     <FormItem>
                       <FormLabel>Image</FormLabel>
                       <FormControl>
-                      <Input accept="image/*" id="picture" type="file"  placeholder="Image For Your Post" {...field} />
+                        <Input
+                          accept="image/*"
+                          id="picture"
+                          type="file"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            field.onChange(file);
+                          }}
+                          placeholder="Image For Your Post"
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Upload Image
-                      </FormDescription>
+                      <FormDescription>Upload Image</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                {imageurl && (
+                  <Image
+                    src={imageurl}
+                    alt="post image"
+                    width={350}
+                    height={350}
+                  ></Image>
+                )}
                 <FormField
                   control={form.control}
-                  name="date"
+                  name="tags"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Publishing Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormDescription>Your Publishing Date.</FormDescription>
+                    <FormItem>
+                      <FormLabel>Tags</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Write your post tags here..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>Tags tell Everything.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -177,15 +204,19 @@ export default function CreatePost() {
               </form>
             </Form>
           </div>
-          {(!isPending)?<div className="mx-80">
-            <div className="flex flex-col space-y-3">
-              <Skeleton className="h-[200px] w-[350px] rounded-xl" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[350px]" />
-                <Skeleton className="h-4 w-[300px]" />
+          {!isPending ? (
+            <div className="mx-80">
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[200px] w-[350px] rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[350px]" />
+                  <Skeleton className="h-4 w-[300px]" />
+                </div>
               </div>
             </div>
-          </div>:<Progress value={33}></Progress>}
+          ) : (
+            <Progress value={1000}></Progress>
+          )}
         </div>
       </main>
     </SidebarProvider>
