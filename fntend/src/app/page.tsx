@@ -1,13 +1,13 @@
 'use client'
-import { ButtonIcon } from "@/components/modif/iconbutton";
+import { ButtonIcon } from "../components/modif/iconbutton";
 import { useEffect,useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Cards } from "@/components/modif/cards";
-import { InputWithButton } from "@/components/modif/inputwithbutton";
-import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
-import Header from "@/components/self/header";
-import { TypewriterEffect } from "@/components/ui/typewriter-effect";
+import { Button } from "../components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert"
+import { Cards } from "../components/modif/cards";
+import { InputWithButton } from "../components/modif/inputwithbutton";
+import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-with-collision";
+import Header from "../components/self/header";
+import { TypewriterEffect } from "../components/ui/typewriter-effect";
 export default function Home() {
   // let [name, setName] = useState("");
   // let [email, setEmail] = useState("");

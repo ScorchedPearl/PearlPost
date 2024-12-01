@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useGetPosts } from "@/hooks/posts";
-import { BackgroundLines } from "@/components/ui/background-lines";
+import { useGetPosts } from "../../hooks/posts";
+import { BackgroundLines } from "../../components/ui/background-lines";
 
 export default function FeedBack() {
   const { posts } = useGetPosts();

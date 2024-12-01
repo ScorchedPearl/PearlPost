@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { graphqlClient } from "clients/api"
+import { graphqlClient } from "../../clients/api"
 import { CreatePostData } from "gql/graphql";
 import { createPostMutation } from "graphql/mutation/post";
 import { getAllPostsQuery, getPostByUsernameQuery } from "graphql/query/post";

@@ -1,13 +1,13 @@
 "use client";
-import { Inputmod } from "@/components/modif/inputwithbutton2";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/modif/app-siderbar";
+import { Inputmod } from "../../../../components/modif/inputwithbutton2";
+import { SidebarProvider, SidebarTrigger } from "../../../../components/ui/sidebar";
+import { AppSidebar } from "../../../../components/modif/app-siderbar";
 import { useCurrentUser } from "@/hooks/user";
-import IconCard from "@/components/self/iconcard";
-import Multiart from "@/components/modif/linechart";
-import { useGetPostsByUsername, usePostCount } from "@/hooks/posts";
-import PostCard from "@/components/self/postcard";
-import { Button } from "@/components/ui/button";
+import IconCard from "../../../../components/self/iconcard";
+import Multiart from "../../../../components/modif/linechart";
+import { useGetPostsByUsername, usePostCount } from "../../../../hooks/posts";
+import PostCard from "../../../../components/self/postcard";
+import { Button } from "../../../../components/ui/button";
 import { useState } from "react";
 
 export default function FeedBack() {

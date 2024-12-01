@@ -1,11 +1,11 @@
 "use client";
 import { useCallback, useState } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/modif/app-siderbar";
+import { SidebarProvider, SidebarTrigger } from "../../../components/ui/sidebar";
+import { AppSidebar } from "../../../components/modif/app-siderbar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "../../../components/ui/button";
+import { Skeleton } from "../../../components/ui/skeleton";
 import {
   Form,
   FormControl,
@@ -14,22 +14,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
 import { useForm } from "react-hook-form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
+} from "../../../components/ui/popover";
+import { cn } from "../../../lib/utils";
+import { Calendar } from "../../../components/ui/calendar";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { useCreatePost } from "@/hooks/posts";
-import { Progress } from "@/components/ui/progress";
-import { graphqlClient } from "clients/api";
+import { useCreatePost } from "../../../hooks/posts";
+import { Progress } from "../../../components/ui/progress";
+import { graphqlClient } from "../../../../clients/api";
 import { getSignedUrlForPostImageQuery } from "graphql/query/post";
 import toast from "react-hot-toast";
 import axios from "axios";

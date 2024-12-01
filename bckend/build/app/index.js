@@ -40,9 +40,10 @@ function initServer() {
       type Mutation{
           ${post_1.Post.mutations}
           ${diary_1.Diary.mutations}
+          ${user_1.User.mutations}
       }
     `,
-            resolvers: Object.assign(Object.assign({ Query: Object.assign(Object.assign({}, user_1.User.resolvers.queries), post_1.Post.resolvers.queries), Mutation: Object.assign(Object.assign({}, post_1.Post.resolvers.mutations), diary_1.Diary.resolvers.mutations) }, post_1.Post.resolvers.authorResolvers), user_1.User.resolvers.PostResolvers),
+            resolvers: Object.assign(Object.assign({ Query: Object.assign(Object.assign({}, user_1.User.resolvers.queries), post_1.Post.resolvers.queries), Mutation: Object.assign(Object.assign(Object.assign({}, post_1.Post.resolvers.mutations), diary_1.Diary.resolvers.mutations), user_1.User.resolvers.mutations) }, post_1.Post.resolvers.authorResolvers), user_1.User.resolvers.PostResolvers),
         });
         yield server.start();
         app.use("/graphql", (0, express4_1.expressMiddleware)(server, { context: (_a) => __awaiter(this, [_a], void 0, function* ({ req, res }) {

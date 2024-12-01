@@ -19,6 +19,6 @@ export const useCurrentUserById = (getUserInfoByIdId:string) => {
   });
   return {
     ...query,
-    user: query.data?.getUserInfoById  || null,
+    userid: query.data?.getUserInfoById  || null,
   };
 };

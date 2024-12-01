@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-} from "@/components/ui/sidebar";
+} from "../ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,8 +19,8 @@ import {
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
 import { ModeToggle } from "./modetoggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { logout } from "@/lib/action";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { logout } from "../../lib/action";
 import { useState,useEffect, useMemo } from "react";
 import { useCurrentUser } from "@/hooks/user";
 

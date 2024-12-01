@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons"
  
-import { Button } from "@/components/ui/button"
+import { Button } from "../ui/button"
  
 export function ButtonIcon(props:any) {
   return (

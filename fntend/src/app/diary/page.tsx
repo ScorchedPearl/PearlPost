@@ -1,4 +1,4 @@
-import { BackgroundLines } from "@/components/ui/background-lines";
+import { BackgroundLines } from "../../components/ui/background-lines";
 
 export default function brain(){
   return <>

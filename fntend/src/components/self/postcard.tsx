@@ -5,10 +5,10 @@ import { FaRegHeart } from "react-icons/fa";
 import { IoAnalyticsOutline } from "react-icons/io5";
 import { LuUpload } from "react-icons/lu";
 import { Inter } from "next/font/google";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import { LinkPreview } from "../ui/link-preview";
-import { FollowerPointerCard } from "@/components/ui/following-pointer";
+import { FollowerPointerCard } from "../ui/following-pointer";
 // Have to Add Server Side Rendering
 interface Author {
   name: string;
@@ -60,13 +60,6 @@ export default function PostCard(props: FeedCardProps) {
     </div>
   );
   return (
-    <FollowerPointerCard
-    title={
-      <TitleComponent
-        title={data.author.name}
-        avatar={data.author.profileImageURL}/>
-      }
-    >
     <div className={inter.className}>
         <div className="max-w-2xl mx-auto antialiased pt-4 relative">
           <div className="">
@@ -135,7 +128,6 @@ export default function PostCard(props: FeedCardProps) {
           </div>
         </div>
     </div>
-    </FollowerPointerCard>
   );
 }
 // export function ServerSideRenderProps():GetServerSideProps{

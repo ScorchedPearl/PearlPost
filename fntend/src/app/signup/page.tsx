@@ -1,8 +1,8 @@
 "use client"
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { signUp } from "@/lib/action";
-import Header from "@/components/self/header";
+import { signUp } from "../../lib/action";
+import Header from "../../components/self/header";
 
 function SignUp(props:any) {
 

@@ -13,38 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const axios_1 = __importDefault(require("axios"));
 const db_1 = require("../../ clients/db");
-const jwt_1 = __importDefault(require("../../services/jwt"));
+const userservice_1 = __importDefault(require("../../services/userservice"));
 const queries = {
     verifyGoogleToken: (parent_1, _a) => __awaiter(void 0, [parent_1, _a], void 0, function* (parent, { token }) {
-        const googletoken = token;
-        const googleoauthurl = new URL('https://www.googleapis.com/oauth2/v3/userinfo');
-        const { data } = yield axios_1.default.get(googleoauthurl.toString(), {
-            headers: {
-                Authorization: `Bearer ${googletoken}`,
-            },
-            responseType: "json"
-        });
-        const user = yield db_1.prismaClient.user.findUnique({
-            where: { email: data.email },
-        });
-        if (!user) {
-            yield db_1.prismaClient.user.create({
-                data: {
-                    email: data.email,
-                    username: data.name,
-                    name: data.given_name,
-                    profileImageURL: data.picture,
-                },
-            });
-        }
-        const userInDb = yield db_1.prismaClient.user.findUnique({
-            where: { email: data.email },
-        });
-        if (!userInDb)
-            throw Error("User.email not found");
-        const session = yield jwt_1.default.generateTokenForUser(userInDb);
+        const session = yield userservice_1.default.verifyGoogleAuthToken(token);
         return session;
     }),
     getCurrentUser: (parent, args, ctx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -67,7 +40,41 @@ const PostResolvers = {
     User: {
         posts: (parent) => {
             return db_1.prismaClient.post.findMany({ where: { authorId: parent.id } });
-        }
+        },
+        followers: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            const result = yield db_1.prismaClient.follows.findMany({
+                where: { following: { id: parent.id } },
+                include: {
+                    follower: true,
+                    following: true,
+                }
+            });
+            return result.map(el => el.follower);
+        }),
+        following: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            const result = yield db_1.prismaClient.follows.findMany({
+                where: { follower: { id: parent.id } },
+                include: {
+                    follower: true,
+                    following: true,
+                }
+            });
+            return result.map(el => el.following);
+        })
     }
 };
-exports.resolvers = { queries, PostResolvers };
+const mutations = {
+    followUser: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { to }, ctx) {
+        if (!ctx.user || !ctx.user.id)
+            throw new Error("User not authenticated");
+        yield userservice_1.default.followUser(ctx.user.id, to);
+        return true;
+    }),
+    unfollowUser: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { to }, ctx) {
+        if (!ctx.user || !ctx.user.id)
+            throw new Error("User not authenticated");
+        yield userservice_1.default.unfollowUser(ctx.user.id, to);
+        return true;
+    })
+};
+exports.resolvers = { queries, PostResolvers, mutations };

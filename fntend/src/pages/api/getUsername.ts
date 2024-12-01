@@ -1,4 +1,4 @@
-import { decrypt } from "@/lib/session";
+import { decrypt } from "../../lib/session";
 import type { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
   const sessionCookie = req.cookies.session;

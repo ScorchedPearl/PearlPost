@@ -1,6 +1,6 @@
 import { TypedQueryDocumentNode } from "graphql";
 import { graphql } from "../../gql";
-import { GetAllPostsQuery } from "gql/graphql";
+import { GetAllPostsQuery } from "../../gql/graphql";
 
 interface GetPostCountResponse {
   getPostCount: number;

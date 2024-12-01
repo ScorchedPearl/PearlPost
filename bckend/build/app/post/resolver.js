@@ -14,8 +14,7 @@ const db_1 = require("../../ clients/db");
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 const s3Client = new client_s3_1.S3Client({
-    region: "ap-south-1",
-    credentials: { accessKeyId: "AKIASFUIRQYBXL6GGTPH", secretAccessKey: "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" }
+    region: process.env.AWS_REGION,
 });
 const queries = {
     getAllPosts: () => db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" } }),
@@ -47,7 +46,7 @@ const queries = {
             throw new Error("Invalid image type");
         }
         const putObjectCommand = new client_s3_1.PutObjectCommand({
-            Bucket: 'pearlpost',
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: `upload/${ctx.user.id}/post/${imageName}-${Date.now()}.${imageType}}`,
         });
         const signedURL = yield (0, s3_request_presigner_1.getSignedUrl)(s3Client, putObjectCommand);

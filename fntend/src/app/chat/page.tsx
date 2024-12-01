@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { useCurrentUser } from "@/hooks/user";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { useEffect, useRef, useState } from "react";

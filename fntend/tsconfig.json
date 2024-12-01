@@ -22,21 +22,21 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
+    "baseUrl": "../kbad/Frontend",
     "paths": {
       "@/*": [
-        "./src/*"
+        "../kbad/Frontend/src/*"
       ]
     },
     "strictNullChecks": true
   },
   "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
-, "src/app/post/dashboard/[id].isx"  ],
+    "../kbad/Frontend/next-env.d.ts",
+    "../kbad/Frontend/.next/types/**/*.ts",
+    "../kbad/Frontend/**/*.ts",
+    "../kbad/Frontend/**/*.tsx"
+, "../kbad/Frontend/src/app/post/dashboard/[id].isx"  ],
   "exclude": [
-    "node_modules"
+    "../kbad/Frontend/node_modules"
   ]
 }

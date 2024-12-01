@@ -1,13 +1,13 @@
 "use client";
-import Header from "@/components/self/header";
+import Header from "../../components/self/header";
 import Link from "next/link";
 import { useActionState, useCallback } from "react";
 import { useFormStatus } from "react-dom";
-import { login } from "@/lib/action";
-import { createGoogleSession } from "@/lib/session";
+import { login } from "../../lib/action";
+import { createGoogleSession } from "../../lib/session";
 import { useGoogleLogin,TokenResponse } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
-import { graphqlClient } from "clients/api";
+import { graphqlClient } from "../../../clients/api";
 import { verifyUserGoogleTokenQuery } from "graphql/query/user";
 import { redirect } from "next/navigation";
 function SignInPage() {
