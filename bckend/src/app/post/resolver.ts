@@ -3,6 +3,7 @@ import { prismaClient } from "../../ clients/db";
 import { GraphqlContext } from "../../interfaces";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { redisClient } from "../../ clients/redis";
 interface CreatePostPayload{
   title: string
   content: string
@@ -13,14 +14,17 @@ const s3Client= new S3Client({
   region:process.env.AWS_REGION,
 })
 const queries={
-  getAllPosts:()=>prismaClient.post.findMany({orderBy:{createdAt:"desc"},
+  getAllPosts:async()=>{ 
+    const posts=prismaClient.post.findMany({orderBy:{createdAt:"desc"},
     include: {
       likes: {
         include: {
           user: true,
         },
       },
-    },}),
+    },})
+    return posts
+  },
   getPostCount: async (parent:any,{username}:{username:string},context:any,info:any) => {
     if(username==="lol"){
       return 0;
@@ -95,6 +99,7 @@ const mutations={
         }
       }
     })
+    await redisClient.del("posts");
     return post;
   },
 };

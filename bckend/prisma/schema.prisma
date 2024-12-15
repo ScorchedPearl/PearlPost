@@ -20,7 +20,9 @@ model User {
 
   posts  Post[]
   comments Comment[]
-
+  recommendedUsers User[]   @relation("UserRecommendations")
+  recommendedBy    User?    @relation("UserRecommendations", fields: [recommendedById], references: [id])
+  recommendedById  String?
   followers Follows[] @relation("followers")
   following Follows[] @relation("following")
 }

@@ -13,18 +13,22 @@ exports.resolvers = void 0;
 const db_1 = require("../../ clients/db");
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
+const redis_1 = require("../../ clients/redis");
 const s3Client = new client_s3_1.S3Client({
     region: process.env.AWS_REGION,
 });
 const queries = {
-    getAllPosts: () => db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" },
-        include: {
-            likes: {
-                include: {
-                    user: true,
+    getAllPosts: () => __awaiter(void 0, void 0, void 0, function* () {
+        const posts = db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" },
+            include: {
+                likes: {
+                    include: {
+                        user: true,
+                    },
                 },
-            },
-        }, }),
+            }, });
+        return posts;
+    }),
     getPostCount: (parent_1, _a, context_1, info_1) => __awaiter(void 0, [parent_1, _a, context_1, info_1], void 0, function* (parent, { username }, context, info) {
         if (username === "lol") {
             return 0;
@@ -93,6 +97,7 @@ const mutations = {
                 }
             }
         });
+        yield redis_1.redisClient.del("posts");
         return post;
     }),
 };

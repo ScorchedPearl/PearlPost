@@ -17,6 +17,8 @@ type Like {
     email:String!
     profileImageURL:String
     likes: [Like]
+    
+    recommendedUsers:[User]
 
     followers:[User]
     following:[User]

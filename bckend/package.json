@@ -30,6 +30,7 @@
     "express": "^4.21.1",
     "graphql": "^16.9.0",
     "http": "^0.0.1-security",
+    "ioredis": "^5.4.1",
     "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.0"
