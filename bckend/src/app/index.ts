@@ -8,7 +8,7 @@ import { User } from "./user";
 import { Post } from "./post"
 import { GraphqlContext } from "../interfaces";
 import JWTService from "../services/jwt";
-import { Diary } from "./diary";
+import { Comment } from "./comment";
 export async function initServer(){
   const app=express();
   app.use(bodyParser.json());
@@ -17,15 +17,16 @@ export async function initServer(){
     typeDefs:`
       ${User.types}
       ${Post.types}
-      ${Diary.types}
+      ${Comment.types}
     
       type Query{
           ${User.query}
           ${Post.query}
+          ${Comment.query}
       }
       type Mutation{
           ${Post.mutations}
-          ${Diary.mutations}
+          ${Comment.mutations}
           ${User.mutations}
       }
     `,
@@ -33,10 +34,11 @@ export async function initServer(){
       Query:{
         ...User.resolvers.queries,
         ...Post.resolvers.queries,
+        ...Comment.resolvers.queries,
       },
       Mutation:{
         ...Post.resolvers.mutations,
-        ...Diary.resolvers.mutations,
+        ...Comment.resolvers.mutations,
         ...User.resolvers.mutations,
       },
       ...Post.resolvers.authorResolvers,

@@ -66,5 +66,23 @@ class UserSevice {
             }
         });
     }
+    static likePost(user, post) {
+        return db_1.prismaClient.like.create({
+            data: {
+                user: { connect: { id: user } },
+                post: { connect: { id: post } },
+            }
+        });
+    }
+    static UnlikePost(user, post) {
+        return db_1.prismaClient.like.delete({
+            where: {
+                unique_user_post_like: {
+                    userId: user,
+                    postId: post,
+                }
+            }
+        });
+    }
 }
 exports.default = UserSevice;

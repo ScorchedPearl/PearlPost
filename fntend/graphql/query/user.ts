@@ -17,6 +17,11 @@ export const getCurrentUserQuery = graphql(`#graphql¸
       profileImageURL
       username
     }
+    likes {
+      createdAt
+      userId
+      postId
+    }
     following {
       name
       profileImageURL

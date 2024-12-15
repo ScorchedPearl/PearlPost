@@ -5,7 +5,6 @@ import { AppSidebar } from "../../../components/modif/app-siderbar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "../../../components/ui/button";
-import { Skeleton } from "../../../components/ui/skeleton";
 import {
   Form,
   FormControl,
@@ -18,22 +17,14 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { useForm } from "react-hook-form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/ui/popover";
-import { cn } from "../../../lib/utils";
-import { Calendar } from "../../../components/ui/calendar";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
 import { useCreatePost } from "../../../hooks/posts";
-import { Progress } from "../../../components/ui/progress";
 import { graphqlClient } from "../../../../clients/api";
 import { getSignedUrlForPostImageQuery } from "graphql/query/post";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Image from "next/image";
+import { useCurrentUser } from "@/hooks/user";
+import Loader from "@/app/loading/page";
 
 const formSchema = z.object({
   image: z.custom<File>((value) => value instanceof File && value.size > 0, {
@@ -64,6 +55,7 @@ export default function CreatePost() {
       tags: "",
     },
   });
+  const {user,isLoading}=useCurrentUser();
   const [imageurl, setImageurl] = useState("");
   const { mutate, isPending } = useCreatePost();
   const onSubmit = useCallback(
@@ -103,122 +95,113 @@ export default function CreatePost() {
     },
     [mutate, graphqlClient, toast]
   );
-
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        <div className="flex items-center justify-center">
-          <div className="ml-20 w-80">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Title of your post" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Enter the title of your post.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
+  if(isLoading){
+    return <Loader></Loader>
+  }
+  else{
+    return (
+      <SidebarProvider>
+        <AppSidebar user={user}/>
+        <main>
+          <SidebarTrigger />
+          <div className="flex items-center justify-center">
+            <div className="ml-20 w-96">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Title of your post" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the title of your post.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Content</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Write your post content here..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Describe your post in detail.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image</FormLabel>
+                        <FormControl>
+                          <Input
+                            accept="image/*"
+                            id="picture"
+                            type="file"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              field.onChange(file);
+                            }}
+                            placeholder="Image For Your Post"
+                          />
+                        </FormControl>
+                        <FormDescription>Upload Image</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {imageurl && (
+                    <Image
+                      src={imageurl}
+                      alt="post image"
+                      width={350}
+                      height={350}
+                    ></Image>
                   )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Content</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Write your post content here..."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Describe your post in detail.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="image"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image</FormLabel>
-                      <FormControl>
-                        <Input
-                          accept="image/*"
-                          id="picture"
-                          type="file"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            field.onChange(file);
-                          }}
-                          placeholder="Image For Your Post"
-                        />
-                      </FormControl>
-                      <FormDescription>Upload Image</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {imageurl && (
-                  <Image
-                    src={imageurl}
-                    alt="post image"
-                    width={350}
-                    height={350}
-                  ></Image>
-                )}
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tags</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Write your post tags here..."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>Tags tell Everything.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form>
-          </div>
-          {!isPending ? (
-            <div className="mx-80">
-              <div className="flex flex-col space-y-3">
-                <Skeleton className="h-[200px] w-[350px] rounded-xl" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[350px]" />
-                  <Skeleton className="h-4 w-[300px]" />
-                </div>
-              </div>
+                  <FormField
+                    control={form.control}
+                    name="tags"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tags</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Write your post tags here..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>Tags tell Everything.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Submit</Button>
+                </form>
+              </Form>
             </div>
-          ) : (
-            <Progress value={1000}></Progress>
-          )}
-        </div>
-      </main>
-    </SidebarProvider>
-  );
+          </div>
+        </main>
+      </SidebarProvider>
+    );
+  }
 }

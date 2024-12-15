@@ -2,7 +2,7 @@
 import { AppSidebar } from "../../../../components/modif/app-siderbar";
 import { SidebarProvider } from "../../../../components/ui/sidebar";
 import { usePostCount } from "../../../../hooks/posts";
-import { useCurrentUser, useCurrentUserById } from "@/hooks/user";
+import { useCurrentUser, useCurrentUserById } from "../../../../hooks/user";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import React, { useCallback, useMemo } from "react";
@@ -11,15 +11,16 @@ import Image from "next/image";
 import { BackgroundBeams } from "../../../../components/ui/background-beams";
 import { usePathname } from 'next/navigation';
 import { graphqlClient } from "../../../../../clients/api";
-import { followUserMutation, unfollowUserMutation } from "graphql/mutation/user";
+import {followUserMutation,unfollowUserMutation} from "../../../../../graphql/mutation/user"
 import { useQueryClient } from "@tanstack/react-query";
+import Loader from "@/app/loading/page";
 export default function Profile() {
   const pathname = usePathname();
   const lastSegment = pathname?.split('/').pop();
-  const { userid } = useCurrentUserById(lastSegment?lastSegment:"");
+  const { userid,isLoading5 } = useCurrentUserById(lastSegment?lastSegment:"");
   const username = userid?.username ? userid.username : "lol";
-  const { postCount } = usePostCount(username);
-  const { user }=useCurrentUser();
+  const { postCount,isLoading3 } = usePostCount(username);
+  const { user,isLoading }=useCurrentUser();
   console.log(lastSegment);
   const Skeleton = () => (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
@@ -61,91 +62,96 @@ export default function Profile() {
     header: <Image src={post?.imageURL as any} alt={<Skeleton ></Skeleton> as any} width={500} height={500}/>,
     // icon: post?.tags?[1]: null,
   })) || [];
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <div>
-        {/* <SidebarTrigger /> */}
+  if(isLoading||isLoading3||isLoading5){
+    return <Loader></Loader>
+  }
+  else{
+    return (
+      <SidebarProvider>
+        <AppSidebar user={user}/>
         <div>
-          <div className="w-screen h-screen">
-            <nav className="flex">
-              <GiCaptainHatProfile className="ml-4 text-4xl" />
-              <div>
-                <div className="text-xl ml-4 bottom-2 relative">
-                  {userid?.name}
-                </div>
-                <div className="text-sm ml-4 bottom-4 relative text-gray-500">
-                  {postCount} Posts
-                </div>
-              </div>{" "}
-            </nav>
-            <div className="flex items-center justify-between">
-              <div>
+          {/* <SidebarTrigger /> */}
+          <div>
+            <div className="w-screen h-screen">
+              <nav className="flex">
+                <GiCaptainHatProfile className="ml-4 text-4xl" />
                 <div>
-                  <Avatar>
-                    <AvatarImage
-                      className="rounded-full ml-20 mt-10 h-32 w-32"
-                      src={
-                        userid && userid.profileImageURL
-                          ? userid.profileImageURL
-                          : "https://avatars.githubusercontent.com/u/184803610?s=96&v=4"
-                      }
+                  <div className="text-xl ml-4 bottom-2 relative">
+                    {userid?.name}
+                  </div>
+                  <div className="text-sm ml-4 bottom-4 relative text-gray-500">
+                    {postCount} Posts
+                  </div>
+                </div>{" "}
+              </nav>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div>
+                    <Avatar>
+                      <AvatarImage
+                        className="rounded-full ml-20 mt-10 h-32 w-32"
+                        src={
+                          userid && userid.profileImageURL
+                            ? userid.profileImageURL
+                            : "https://avatars.githubusercontent.com/u/184803610?s=96&v=4"
+                        }
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="ml-24 text-2xl">{userid?.name}</div>
+                  <div className="ml-24 text-sm text-gray-500">
+                    @{userid?.username}
+                  </div>
+                </div>
+                <div className="mr-96 z-50">
+                  {(userid?.username!==user?.username)&&<>
+                  {
+                    amiFollowing ? (
+                      <button onClick={handleUnfollowUser}className="bg-blue-500 z-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Following
+                      </button>
+                    ) : (
+                      <button onClick={handleFollowUser}className="bg-blue-500 z-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Follow
+                      </button>
+                    )
+                  }
+                  </>}
+                </div>
+              </div>
+              <div className="ml-24">
+                {/* BIO
+                <br />
+                ..
+                <br />
+                .. ..
+                <br />
+                .. .. ..
+                <br /> */}
+              </div>
+              <div className="ml-24 flex gap-4 text-gray-500 text-sm "><span>Following-{userid?.following?.length}  </span><span>Follower-{userid?.followers?.length}</span></div>
+              <BentoGrid></BentoGrid>
+  
+              <div className="relative right-48">
+                <BentoGrid className="max-w-4xl mx-auto">
+                  {items.map((item, i) => (
+                    <BentoGridItem
+                      key={i}
+                      title={item.title}
+                      description={item.description}
+                      header={item.header}
+                      // icon={item.icon}
+                      className={i === 3 || i === 6 ? "md:col-span-2" : ""}
                     />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="ml-24 text-2xl">{userid?.name}</div>
-                <div className="ml-24 text-sm text-gray-500">
-                  @{userid?.username}
-                </div>
+                  ))}
+                </BentoGrid>
               </div>
-              <div className="mr-96 z-50">
-                {(userid?.username!==user?.username)&&<>
-                {
-                  amiFollowing ? (
-                    <button onClick={handleUnfollowUser}className="bg-blue-500 z-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Following
-                    </button>
-                  ) : (
-                    <button onClick={handleFollowUser}className="bg-blue-500 z-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Follow
-                    </button>
-                  )
-                }
-                </>}
-              </div>
-            </div>
-            <div className="ml-24">
-              {/* BIO
-              <br />
-              ..
-              <br />
-              .. ..
-              <br />
-              .. .. ..
-              <br /> */}
-            </div>
-            <div className="ml-24 flex gap-4 text-gray-500 text-sm "><span>Following-{userid?.following?.length}  </span><span>Follower-{userid?.followers?.length}</span></div>
-            <BentoGrid></BentoGrid>
-
-            <div className="relative right-48">
-              <BentoGrid className="max-w-4xl mx-auto">
-                {items.map((item, i) => (
-                  <BentoGridItem
-                    key={i}
-                    title={item.title}
-                    description={item.description}
-                    header={item.header}
-                    // icon={item.icon}
-                    className={i === 3 || i === 6 ? "md:col-span-2" : ""}
-                  />
-                ))}
-              </BentoGrid>
             </div>
           </div>
+          <BackgroundBeams />
         </div>
-        <BackgroundBeams />
-      </div>
-    </SidebarProvider>
-  );
+      </SidebarProvider>
+    );
+  }
 }

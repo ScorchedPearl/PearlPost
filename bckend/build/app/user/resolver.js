@@ -25,7 +25,13 @@ const queries = {
         const id = (_a = ctx.user) === null || _a === void 0 ? void 0 : _a.id;
         if (!id)
             return null;
-        const user = yield db_1.prismaClient.user.findUnique({ where: { id } });
+        const user = yield db_1.prismaClient.user.findUnique({ where: { id }, include: {
+                likes: {
+                    include: {
+                        user: true,
+                    },
+                },
+            }, });
         console.log(user);
         return user;
     }),
@@ -74,6 +80,18 @@ const mutations = {
         if (!ctx.user || !ctx.user.id)
             throw new Error("User not authenticated");
         yield userservice_1.default.unfollowUser(ctx.user.id, to);
+        return true;
+    }),
+    likePost: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { id }, ctx) {
+        if (!ctx.user || !ctx.user.id)
+            throw new Error("User not authenticated");
+        yield userservice_1.default.likePost(ctx.user.id, id);
+        return true;
+    }),
+    unlikePost: (parent_1, _a, ctx_1) => __awaiter(void 0, [parent_1, _a, ctx_1], void 0, function* (parent, { id }, ctx) {
+        if (!ctx.user || !ctx.user.id)
+            throw new Error("User not authenticated");
+        yield userservice_1.default.UnlikePost(ctx.user.id, id);
         return true;
     })
 };

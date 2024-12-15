@@ -13,12 +13,13 @@ model User {
   name            String?
   email           String  @unique
   profileImageURL String?
+  likes Like[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   posts  Post[]
-  diarys Diary[]
+  comments Comment[]
 
   followers Follows[] @relation("followers")
   following Follows[] @relation("following")
@@ -31,6 +32,8 @@ model Post {
   imageURL  String
   tags      Tag[]   @relation("PostTags")
   published Boolean @default(false)
+  likes Like[]
+  comments Comment[]
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
@@ -38,12 +41,20 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+model Like {
+  createdAt   DateTime @default(now())
+  userId      String 
+  user        User     @relation(fields: [userId], references: [id])
+  postId      String 
+  post        Post    @relation(fields: [postId], references: [id])
 
-model Diary {
+  @@id([userId, postId], name: "unique_user_post_like")     
+}
+
+model Comment {
   id        String   @id @default(cuid())
-  title     String
   content   String
-  imageUrl  String
+  imageUrl  String?
   date      DateTime
   public    Boolean  @default(false)
   authorId  String
@@ -51,12 +62,14 @@ model Diary {
   tags      Tag[]    @relation("DiaryTags")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  post      Post   @relation(fields: [postId], references: [id])
+  postId    String
 }
 
 model Tag {
   id      String  @id @default(cuid())
   title   String  @unique
-  diaries Diary[] @relation("DiaryTags")
+  comments Comment[] @relation("DiaryTags")
   posts   Post[]  @relation("PostTags")
 }
 

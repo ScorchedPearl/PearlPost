@@ -59,5 +59,23 @@ class UserSevice{
       }
     })
   }
+  public static likePost(user:string,post:string){
+    return prismaClient.like.create({
+      data:{
+        user:{connect:{id:user}},
+        post:{connect:{id:post}},
+      }
+    })
+  }
+  public static UnlikePost(user:string,post:string){
+    return prismaClient.like.delete({
+      where:{
+        unique_user_post_like:{
+          userId:user,
+          postId:post,
+        }
+      }
+    })
+  }
 }
 export default UserSevice;

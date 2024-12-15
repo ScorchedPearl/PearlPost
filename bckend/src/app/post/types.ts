@@ -1,13 +1,12 @@
-import { Diary, Post } from "@prisma/client"
-
-
 export const types=`#graphql
-  # type tag{
-  # id: string
-  # title:string
-  # diaries:Diary[]
-  # posts:Post[]
-  # }
+  type Like {
+    id: ID!         
+    createdAt: DateTime     
+    userId: String     
+    postId: String      
+    user: User         
+    post: Post         
+  }
   input CreatePostData {
     title: String!
     content: String!
@@ -24,5 +23,6 @@ export const types=`#graphql
     createdAt: DateTime!
     updatedAt: DateTime
     author: User!
+    likes: [Like]
   }
 `;

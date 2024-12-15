@@ -9,16 +9,20 @@ export default function IconCard(props:any) {
   const items=[
     {
       title:"Total Posts",
-      icon:<BsFillPostcardFill/>
+      icon:<BsFillPostcardFill/>,
+      count:props.PostCount
     },{
       title:"Total Comments",
       icon:<FaComments />
+
     },{
       title:"Total Likes",
-      icon:<FcLike />
+      icon:<FcLike />,
+      count:props.LikeCount
     },{
-      title:"Profile Viewed",
-      icon:<CgProfile />
+      title:"Total Follower",
+      icon:<CgProfile />,
+      count:props.FollowerCount
     }
   ]
   return ( 
@@ -30,7 +34,7 @@ export default function IconCard(props:any) {
             <div className="h-full w-10">{item.icon}</div>
             </div>
             <div className="float-left">
-            {props.PostCount}
+              {item.count}
           </div>
           </div>
           )

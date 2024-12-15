@@ -3,18 +3,19 @@ import { GraphqlContext } from "../../interfaces";
 
 
 
-interface CreateDiaryData {
+interface CreateCommentData {
   title: string
   content: string
   imageUrl?: string
   tags?: string[]
   date?: Date
   public?:boolean
+  postid: string
 }
 const mutations = {
-  createDiary: async (
+  createComment: async (
     parent: any,
-    { payload }: { payload: CreateDiaryData },
+    { payload }: { payload: CreateCommentData },
     ctx: GraphqlContext
   ) => {
     if (!ctx.user) {
@@ -40,9 +41,8 @@ const mutations = {
       })
     );
 
-    const diary = await prismaClient.diary.create({
+    const comment = await prismaClient.comment.create({
       data: {
-        title: payload.title,
         content: payload.content,
         imageUrl: payload.imageUrl,
         date: date,
@@ -53,14 +53,32 @@ const mutations = {
         author: {
           connect: { id: ctx.user.id },
         },
+        post:{
+          connect: { id: payload.postid }
+        },
       },
     });
 
-    return diary;
+    return comment;
   },
 };
 
-
-
-
-export const resolvers={mutations}
+const queries={
+  getCommentByPostId: async(
+    parent:any,
+    {id}:{id:string},
+    ctx:GraphqlContext
+  )=>{
+    if (!ctx.user) {
+      throw new Error("You must be logged in to create a post");
+    }
+    const comment=await prismaClient.comment.findMany({
+      where:{
+        postId: id
+      },
+      include: { author: true }
+    })
+    return comment;
+  }
+}
+export const resolvers={mutations,queries}

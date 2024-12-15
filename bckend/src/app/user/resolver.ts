@@ -13,7 +13,13 @@ const queries={
   getCurrentUser: async(parent:any, args:any, ctx:GraphqlContext)=>{
     const id=ctx.user?.id
     if(!id) return null
-    const user= await prismaClient.user.findUnique({ where:{id} })
+    const user= await prismaClient.user.findUnique({ where:{id},include: {
+      likes: {
+        include: {
+          user: true,
+        },
+      },
+    }, })
     console.log(user);
     return user;
   },
@@ -66,6 +72,17 @@ const mutations={
     await UserSevice.unfollowUser(ctx.user.id,to);
     return true;
 
+  },
+  likePost:async (parent:any,{id}:{id:string},ctx:GraphqlContext)=>{
+    if(!ctx.user||!ctx.user.id) throw new Error("User not authenticated");
+    await UserSevice.likePost(ctx.user.id,id);
+    return true;
+  },
+  unlikePost:async (parent:any,{id}:{id:string},ctx:GraphqlContext)=>{
+    if(!ctx.user||!ctx.user.id) throw new Error("User not authenticated");
+    
+    await UserSevice.UnlikePost(ctx.user.id,id);
+    return true;
   }
 }
 export const resolvers = { queries,PostResolvers,mutations };

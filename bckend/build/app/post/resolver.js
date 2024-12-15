@@ -17,7 +17,14 @@ const s3Client = new client_s3_1.S3Client({
     region: process.env.AWS_REGION,
 });
 const queries = {
-    getAllPosts: () => db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" } }),
+    getAllPosts: () => db_1.prismaClient.post.findMany({ orderBy: { createdAt: "desc" },
+        include: {
+            likes: {
+                include: {
+                    user: true,
+                },
+            },
+        }, }),
     getPostCount: (parent_1, _a, context_1, info_1) => __awaiter(void 0, [parent_1, _a, context_1, info_1], void 0, function* (parent, { username }, context, info) {
         if (username === "lol") {
             return 0;

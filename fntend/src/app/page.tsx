@@ -9,11 +9,8 @@ import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-
 import Header from "../components/self/header";
 import { TypewriterEffect } from "../components/ui/typewriter-effect";
 export default function Home() {
-  // let [name, setName] = useState("");
-  // let [email, setEmail] = useState("");
-  // let [me, setMe] = useState(false);
+  
   const [showNotification, setShowNotification] = useState(false);
-  const [count,setCount]=useState(0);
   useEffect(() => {
     if (showNotification) {
       
@@ -21,10 +18,6 @@ export default function Home() {
       return () => clearTimeout(timer); 
     }
   }, [showNotification]);
-  function counthandler(){
-    setCount(c=>c+1);
-  }
- 
   const words = [
     {
       text: "Write",
@@ -47,6 +40,7 @@ export default function Home() {
   return (
     <div>
       <Header></Header>
+      
       <BackgroundBeamsWithCollision>
         <div>
         <div> <TypewriterEffect words={words} /></div>
@@ -61,31 +55,11 @@ export default function Home() {
         </div>
       </h2>
       </div>
+      
     
     </BackgroundBeamsWithCollision>
-   
     <Cards></Cards>
-    <p className="font-thin">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. A aliquam optio
-      totam. Placeat maxime et harum tempore quia eius voluptatibus.
-    </p>
-    <br />
-    <Button variant="outline" onClick={counthandler}
-     >{count}
-    </Button>
-    <br />
-    <ButtonIcon setShowNotification={setShowNotification}></ButtonIcon>
     
-    <br />
-    {showNotification &&<div className="animate-fade">
-      <Alert>
-      <AlertTitle>Heads up!</AlertTitle>
-      <AlertDescription>
-        You can add components and dependencies to your app using the cli.
-      </AlertDescription>
-    </Alert></div>}
-    <InputWithButton></InputWithButton>
-  </div>
-     
+  </div> 
   );
 }

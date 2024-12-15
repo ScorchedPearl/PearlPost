@@ -1,12 +1,12 @@
 export const types=`#graphql
-  input CreateDiaryData {
-    title: String!
+  input CreateCommentData {
     content: String!
     imageUrl: String
     tags: [String!]
     date: String
+    postid: ID!
   }
-  type Diary {
+  type Comment {
     id: ID!
     title: String!
     content: String!
@@ -15,5 +15,6 @@ export const types=`#graphql
     imageUrl: String
     public:Boolean
     author: User!
+    postid: ID!
   }
 `;

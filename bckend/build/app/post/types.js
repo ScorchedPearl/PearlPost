@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.types = void 0;
 exports.types = `#graphql
-  # type tag{
-  # id: string
-  # title:string
-  # diaries:Diary[]
-  # posts:Post[]
-  # }
+  type Like {
+    id: ID!         
+    createdAt: DateTime     
+    userId: String     
+    postId: String      
+    user: User         
+    post: Post         
+  }
   input CreatePostData {
     title: String!
     content: String!
@@ -24,5 +26,6 @@ exports.types = `#graphql
     createdAt: DateTime!
     updatedAt: DateTime
     author: User!
+    likes: [Like]
   }
 `;

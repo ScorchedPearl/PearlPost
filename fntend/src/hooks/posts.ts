@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { graphqlClient } from "../../clients/api"
-import { CreatePostData } from "gql/graphql";
+import { CreatePostData, User } from "gql/graphql";
 import { createPostMutation } from "graphql/mutation/post";
 import { getAllPostsQuery, getPostByUsernameQuery } from "graphql/query/post";
 import { getPostCountQuery } from 'graphql/query/post';
@@ -17,6 +17,7 @@ export type GetPostByUsernameQuery = {
     title: string;
     imageUrl: string;
     tags: string[];
+    like:User[];
     author: {
       name: string;
       profileImageURL: string;
@@ -37,6 +38,7 @@ interface Post {
   createdAt:Date;
   updatedAt:Date;
   author: Author;
+  Like: User[];
 }
 interface GetAllPostsResponse {
   getAllPosts: Post[];
@@ -71,7 +73,9 @@ export const useGetPosts=()=>{
     queryKey:["all-posts"],
     queryFn:()=>graphqlClient.request(getAllPostsQuery as any),
 })
-  return{ ...query,posts:query.data?.getAllPosts};
+  return{ ...query,posts:query.data?.getAllPosts,
+    isLoading2: query.isLoading,
+  };
 }
 export const useGetPostsByUsername = (username: string) => {
   const query = useQuery<GetPostByUsernameQuery, Error>({
@@ -82,7 +86,9 @@ export const useGetPostsByUsername = (username: string) => {
         { username }
       ),
   });
-  return{...query,post:query.data?.getPostByUsername};
+  return{...query,post:query.data?.getPostByUsername,
+    isLoading4:query.isLoading,
+  };
 }
 
 export const usePostCount = (username: string) => {
@@ -94,5 +100,7 @@ export const usePostCount = (username: string) => {
         { username }
       ),
   });
-  return { ...query, postCount:query.data?.getPostCount };
+  return { ...query, postCount:query.data?.getPostCount,
+    isLoading3: query.isLoading,
+   };
 };

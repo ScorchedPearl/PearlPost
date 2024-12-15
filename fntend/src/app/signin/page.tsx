@@ -20,20 +20,6 @@ function SignInPage() {
       onError: () => console.log('Login Failed'),
       scope: 'openid profile email',
     });
-    // function fetchGoogleUserInfo(accessToken: string) {
-    //   fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       console.log("User info:", data);
-    //     })
-    //     .catch(error => {
-    //       console.error("Error fetching user info:", error);
-    //     });
-    // }
     const handleLoginGoogle=useCallback(async (cred:TokenResponse)=>{
       const googleToken=cred.access_token
       if(!googleToken) return toast.error(`google token not found`);

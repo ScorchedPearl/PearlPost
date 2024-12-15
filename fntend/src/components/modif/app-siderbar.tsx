@@ -26,11 +26,10 @@ import { useCurrentUser } from "@/hooks/user";
 
 
 
-export function AppSidebar() {
-  const {user}=useCurrentUser();
+export function AppSidebar(props) {
   const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
-  let linkAccount=`/post/profile/${user?user.id:""}`
+  let linkAccount=`/post/profile/${props.user?props.user.id:""}`
     const items=[
         {
           title: "Home",
@@ -52,7 +51,7 @@ export function AppSidebar() {
         },
         {
           title: "DashBoard",
-          link: `/post/dashboard/${user?user.username:""}`,
+          link: `/post/dashboard/${props.user?props.user.username:""}`,
           url: "#",
           icon: LayoutDashboard,
         },
@@ -97,10 +96,10 @@ export function AppSidebar() {
                   <SidebarMenuButton>
                     <div className="flex pt-2 pb-2">
                       <Avatar>
-                        <AvatarImage src={user && user.profileImageURL? user.profileImageURL:"https://avatars.githubusercontent.com/u/184803610?s=96&v=4"}/>
+                        <AvatarImage src={props.user && props.user.profileImageURL? props.user.profileImageURL:"https://avatars.githubusercontent.com/u/184803610?s=96&v=4"}/>
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
-                      <div className="text-xl ml-4 mt-1 text-gray-400">{user&&user.username?user.username:username}</div>
+                      <div className="text-xl ml-4 mt-1 text-gray-400">{props.user&&props.user.username?props.user.username:username}</div>
                     </div>
                     {/* <ChevronUp className="ml-auto" /> */}
                   </SidebarMenuButton>
